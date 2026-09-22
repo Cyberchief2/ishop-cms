@@ -1,0 +1,17 @@
+{
+  "collectionName": "components_product_specifications",
+  "info": {
+    "displayName": "Specification",
+    "icon": "alien"
+  },
+  "options": {},
+  "attributes": {
+    "spec_name": {
+      "type": "string"
+    },
+    "spec_value": {
+      "type": "string"
+    }
+  },
+  "config": {}
+}
