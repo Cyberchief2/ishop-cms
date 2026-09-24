@@ -18,6 +18,7 @@
     "@strapi/database": "5.52.2",
     "@strapi/plugin-cloud": "5.52.2",
     "@strapi/plugin-users-permissions": "5.52.2",
+    "@strapi/provider-upload-cloudinary": "^5.55.1",
     "@strapi/strapi": "5.52.2",
     "better-sqlite3": "12.8.0",
     "react": "^18.0.0",
