@@ -33,6 +33,14 @@
         "audios"
       ]
     },
+    "BookFile": {
+      "type": "media",
+      "multiple": false,
+      "required": false,
+      "allowedTypes": [
+        "files"
+      ]
+    },
     "Category": {
       "type": "string"
     },
@@ -46,9 +54,6 @@
       "type": "component",
       "component": "product.specification",
       "repeatable": true
-    },
-    "spec_value": {
-      "type": "string"
     }
   }
 }
