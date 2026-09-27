@@ -66,6 +66,12 @@
       "inversedBy": "users",
       "configurable": false
     },
+    "phone": {
+      "type": "string"
+    },
+    "address": {
+      "type": "text"
+    },
     "orders": {
       "type": "relation",
       "relation": "oneToMany",
