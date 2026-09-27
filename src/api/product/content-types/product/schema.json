@@ -54,6 +54,12 @@
       "type": "component",
       "component": "product.specification",
       "repeatable": true
+    },
+    "orders": {
+      "type": "relation",
+      "relation": "oneToMany",
+      "target": "api::order.order",
+      "mappedBy": "products"
     }
   }
 }
