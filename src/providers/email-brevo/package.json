@@ -1,7 +1,0 @@
-﻿{
-  "name": "email-brevo",
-  "version": "1.0.0",
-  "description": "Brevo HTTP API email provider for Strapi (works on Railway Hobby)",
-  "main": "index.js",
-  "license": "MIT"
-}

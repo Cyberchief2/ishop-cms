@@ -1,4 +1,4 @@
-﻿import type { Core } from '@strapi/strapi';
+import type { Core } from '@strapi/strapi';
 
 const allowedMediaTypes = [
   'image/*',
@@ -28,18 +28,6 @@ const deniedTypes = [
 ];
 
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
-  email: {
-    config: {
-      provider: 'email-brevo',
-      providerOptions: {
-        apiKey: env('BREVO_API_KEY'),
-      },
-      settings: {
-        defaultFrom: 'noreply@ishop.com.ng',
-        defaultReplyTo: 'support@ishop.com.ng',
-      },
-    },
-  },
   upload: {
     config: {
       provider: 'cloudinary',
