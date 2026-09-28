@@ -4,12 +4,7 @@ export default {
   register(/* { strapi }: { strapi: Core.Strapi } */) {},
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
-    // Register a custom Brevo HTTP-based email provider
-    // (works on Railway Hobby because it uses HTTPS, not blocked SMTP ports)
-    const emailService = strapi.plugin('email').service('email');
-
-    // Override the underlying send method directly
-    const originalSend = emailService.send.bind(emailService);
+    const emailService = strapi.plugin('email').service('email') as any;
 
     emailService.send = async (options: any) => {
       const { from, to, cc, bcc, replyTo, subject, text, html } = options;
@@ -49,7 +44,7 @@ export default {
         throw new Error(`Brevo API error ${res.status}: ${errText}`);
       }
 
-      const data = await res.json();
+      const data: any = await res.json();
       strapi.log.info(`✉️  Email sent via Brevo to ${to} (messageId: ${data.messageId})`);
       return data;
     };
