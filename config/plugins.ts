@@ -30,7 +30,7 @@ const deniedTypes = [
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
   email: {
     config: {
-      provider: 'email-brevo',
+      provider: 'src/providers/email-brevo',
       providerOptions: {
         apiKey: env('BREVO_API_KEY'),
       },
