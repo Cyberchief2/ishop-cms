@@ -28,6 +28,23 @@ const deniedTypes = [
 ];
 
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
+  email: {
+    config: {
+      provider: 'nodemailer',
+      providerOptions: {
+        host: env('SMTP_HOST', 'smtp-relay.brevo.com'),
+        port: env.int('SMTP_PORT', 587),
+        auth: {
+          user: env('SMTP_USERNAME'),
+          pass: env('SMTP_PASSWORD'),
+        },
+      },
+      settings: {
+        defaultFrom: 'noreply@ishop.com.ng',
+        defaultReplyTo: 'support@ishop.com.ng',
+      },
+    },
+  },
   upload: {
     config: {
       provider: 'cloudinary',
