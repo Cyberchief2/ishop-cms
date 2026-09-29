@@ -4,51 +4,44 @@ const { ApplicationError } = require('@strapi/utils').errors;
 
 module.exports = {
   async googleCallback(ctx) {
-    const params = ctx.query;
+    const accessToken = ctx.query.access_token;
 
-    if (!params.access_token) {
-      throw new ApplicationError('Missing access_token');
+    if (!accessToken) {
+      return ctx.badRequest('Missing access_token');
     }
 
     try {
       const userInfo = await fetch(
-        `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${params.access_token}`
+        `https://www.googleapis.com/oauth2/v3/userinfo?access_token=${accessToken}`
       ).then((res) => res.json());
 
       if (!userInfo || !userInfo.email) {
-        throw new ApplicationError('Could not get email from Google');
+        return ctx.badRequest('Could not get email from Google');
       }
 
       const email = userInfo.email.toLowerCase();
       const username = userInfo.name || email.split('@')[0];
 
-      const pluginStore = strapi.store({
-        type: 'plugin',
-        name: 'users-permissions',
-      });
-
-      const grantSettings = await pluginStore.get({ key: 'grant' });
-      const grantConfig = grantSettings.google || {};
-
-      const existingUser = await strapi
+      // Find existing user with this email
+      let user = await strapi
         .query('plugin::users-permissions.user')
-        .findOne({
-          where: { email },
-        });
+        .findOne({ where: { email } });
 
-      let user;
-
-      if (existingUser) {
+      if (user) {
         strapi.log.info(`🔗 Linking Google login to existing user: ${email}`);
-        user = existingUser;
       } else {
         strapi.log.info(`✅ Creating new Google user: ${email}`);
 
+        const pluginStore = strapi.store({
+          type: 'plugin',
+          name: 'users-permissions',
+        });
+        const grantSettings = await pluginStore.get({ key: 'grant' });
+        const defaultRoleType = (grantSettings && grantSettings.google && grantSettings.google.default_role) || 'authenticated';
+
         const defaultRole = await strapi
           .query('plugin::users-permissions.role')
-          .findOne({
-            where: { type: grantConfig.default_role || 'authenticated' },
-          });
+          .findOne({ where: { type: defaultRoleType } });
 
         user = await strapi.plugin('users-permissions').service('user').add({
           username: username,
@@ -78,7 +71,7 @@ module.exports = {
       });
     } catch (error) {
       strapi.log.error('Google callback error:', error);
-      throw new ApplicationError(error.message);
+      return ctx.badRequest(error.message);
     }
   },
 };
