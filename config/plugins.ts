@@ -1,4 +1,4 @@
-import type { Core } from '@strapi/strapi';
+﻿import type { Core } from '@strapi/strapi';
 
 const allowedMediaTypes = [
   'image/*',
@@ -28,6 +28,11 @@ const deniedTypes = [
 ];
 
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
+  'users-permissions': {
+    config: {
+      jwtSecret: env('JWT_SECRET'),
+    },
+  },
   upload: {
     config: {
       provider: 'cloudinary',
