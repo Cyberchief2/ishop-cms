@@ -28,6 +28,10 @@ const deniedTypes = [
 ];
 
 const config = ({ env }: Core.Config.Shared.ConfigParams): Core.Config.Plugin => ({
+  'tablify': {
+    enabled: true,
+    resolve: './node_modules/strapi-plugin-tablify',
+  },
   'users-permissions': {
     config: {
       jwtSecret: env('JWT_SECRET'),
