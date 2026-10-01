@@ -4,6 +4,9 @@ export default {
   register(/* { strapi }: { strapi: Core.Strapi } */) {},
 
   async bootstrap({ strapi }: { strapi: Core.Strapi }) {
+    // ============================================
+    // 1. Override email service to send via Brevo HTTP API
+    // ============================================
     const emailService = strapi.plugin('email').service('email') as any;
 
     emailService.send = async (options: any) => {
@@ -50,5 +53,42 @@ export default {
     };
 
     strapi.log.info('✅ Brevo email provider registered');
+
+    // ============================================
+    // 2. Register HTTP endpoint for Express to trigger emails
+    // ============================================
+    strapi.server.routes([
+      {
+        method: 'POST',
+        path: '/api/email-test',
+        handler: async (ctx: any) => {
+          try {
+            const { to, subject, html } = ctx.request.body;
+
+            if (!to || !subject || !html) {
+              return ctx.badRequest('Missing required fields: to, subject, html');
+            }
+
+            await strapi.plugin('email').service('email').send({
+              to,
+              from: 'noreply@ishop.com.ng',
+              replyTo: 'support@ishop.com.ng',
+              subject,
+              html,
+            });
+
+            return ctx.send({ ok: true });
+          } catch (err: any) {
+            strapi.log.error('Email send failed:', err.message);
+            return ctx.internalServerError(err.message);
+          }
+        },
+        config: {
+          auth: false,
+        },
+      },
+    ]);
+
+    strapi.log.info('✅ Email endpoint registered at /api/email-test');
   },
 };
